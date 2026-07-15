@@ -1,3 +1,13 @@
+import os
+import sys
+import io
+
+# Configurar stdout e stderr para usar UTF-8 e evitar erros de codificação no Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
 import numpy as np
 import tensorflow as tf
 
@@ -20,7 +30,9 @@ CLASS_NAMES = [
 
 
 def main():
-    interpreter = tf.lite.Interpreter(model_path="model.tflite")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(script_dir, "model.tflite")
+    interpreter = tf.lite.Interpreter(model_path=model_path)
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()

@@ -15,7 +15,9 @@ N_SAMPLES = 5
 
 
 def main():
-    interpreter = tf.lite.Interpreter(model_path="model.tflite")
+    import os
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    interpreter = tf.lite.Interpreter(model_path=os.path.join(script_dir, "model.tflite"))
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
@@ -24,7 +26,7 @@ def main():
     x_test = x_test.astype("float32") / 255.0
     x_test = np.expand_dims(x_test, axis=-1)
 
-    print(f"Rodando inferência em {N_SAMPLES} amostras usando model.tflite:\n")
+    print(f"Rodando inferencia em {N_SAMPLES} amostras usando model.tflite:\n")
     for i in range(N_SAMPLES):
         sample = np.expand_dims(x_test[i], axis=0).astype(input_details[0]["dtype"])
         interpreter.set_tensor(input_details[0]["index"], sample)
